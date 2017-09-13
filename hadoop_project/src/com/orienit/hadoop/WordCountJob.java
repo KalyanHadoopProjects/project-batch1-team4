@@ -91,7 +91,7 @@ public class WordCountJob implements Tool {
 		// if `status == -1` then `Job Failure`
 		int status = ToolRunner.run(new Configuration(), new WordCountJob(), args);
 
-		System.out.println("My Status is: " + status);
+		System.out.println("My Status : " + status);
 	}
 }
 
