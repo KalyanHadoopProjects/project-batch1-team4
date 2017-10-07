@@ -1,0 +1,111 @@
+(HIVE TASK7):
+=====================================================================================================================================
+YearStart,YearEnd,LocationAbbr,LocationDesc,Datasource,Class,Topic,Question,Data_Value_Unit,Data_Value_Type,Data_Value,
+Data_Value_Alt,Data_Value_Footnote_Symbol,Data_Value_Footnote,Low_Confidence_Limit,High_Confidence_Limit ,Sample_Size,Total,Age(years),Education,Gender,Income,Race/Ethnicity,GeoLocation,ClassID,TopicID,QuestionID,DataValueTypeID,LocationID,StratificationCategory1,Stratification1,StratificationCategoryId1,
+StratificationID1
+
+
+
+CREATE TABLE etl_risk_survey(
+YearStart string,
+YearEnd string,
+LocationAbbr string,
+LocationDesc string,
+Datasource string,
+Class string,
+Topic string,
+Question string,
+Data_Value_Unit string,
+Data_Value_Type string,
+Data_Value string,
+Data_Value_Alt string,
+Data_Value_Footnote_Symbol string,
+Data_Value_Footnote string,
+Low_Confidence_Limit string,
+High_Confidence_Limit string,
+Sample_Size string,
+Total  string,
+Age_years  string,
+Education  string,
+Gender  string,
+Income  string,
+Race_Ethnicity  string,
+GeoLocation  string,
+ClassID  string,
+TopicID  string,
+QuestionID  string,
+DataValueTypeID  string,
+LocationID  string,
+StratificationCategory1  string,
+Stratification1  string,
+StratificationCategoryId1  string,
+StratificationID1  string
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   'separatorChar' = ',',
+   'quoteChar' = '\"',
+   'escapeChar' = '\\'
+   )
+STORED AS TEXTFILE
+tblproperties("skip.header.line.count"="1")
+
+
+
+;
+
+load data local inpath '/home/prakash/hive realtime project/Behavioral_Risk_Factor_Surveillance_System.csv' into table etl_risk_survey;
+
+
+
+
+create table riskfactorpartition11(
+YearStart string,
+LocationAbbr string,
+Datasource string,
+Class string,
+Topic string,
+Question string,
+Data_Value_Unit string,
+Data_Value_Type string,
+Data_Value string,
+Data_Value_Alt string,
+Data_Value_Footnote_Symbol string,
+Data_Value_Footnote string,
+Low_Confidence_Limit string,
+High_Confidence_Limit string,
+Sample_Size string,
+Total  string,
+Age_years  string,
+Education  string,
+Gender  string,
+Income  string,
+Race_Ethnicity  string,
+ClassID  string,
+TopicID  string,
+QuestionID  string,
+DataValueTypeID  string,
+LocationID  string,
+StratificationCategory1  string,
+Stratification1  string,
+StratificationCategoryId1  string,
+StratificationID1  string
+)
+PARTITIONED BY (YearEnd string, LocationDesc string, GeoLocation string)
+ROW FORMAT SERDE
+    'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   'separatorChar' = ',',
+   'quoteChar' = '\"',
+   'escapeChar' = '\\'
+   )TBLPROPERTIES (
+       'skip.header.line.count' = '1');
+
+
+
+
+INSERT OVERWRITE TABLE riskfactorpartition11(YearEnd, LocationDesc, GeoLocation ) select * from etl_risk_survey;
+
+
+select * from etl_risk_survey where Sample_Size >"1000" and Age_years between "40" and "50";
+
