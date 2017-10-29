@@ -1,0 +1,21 @@
+JSON DATA:
+----------
+add jar /home/prakash/work/apache-hive-1.2.1-bin/lib/hive-serdes-1.0-SNAPSHOT.jar;
+
+create table student1_json(
+    name string,
+    id int,
+    course string,
+    year int
+    ) ROW FORMAT SERDE 'com.cloudera.hive.serde.JSONSerDe'
+
+
+LOAD DATA LOCAL INPATH '/home/prakash/student1.json' INTO TABLE student1_json;
+
+
+
+CREATE TABLE student1_json_op(name string, id int, course string, year int);
+
+
+insert into student1_json_op(name,id, course, year) select name,id, course, year from student1_json where id>2 and course="spark";
+

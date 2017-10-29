@@ -1,0 +1,32 @@
+XML DATA:
+--------
+add jar /home/prakash/work/apache-hive-1.2.1-bin/lib/hivexmlserde-1.0.5.3.
+
+create table student1_xml(
+name string,
+id int,
+course string,
+year int
+)
+row format serde 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+with serdeproperties(
+"column.xpath.name"="/student/name/text()",
+"column.xpath.id"="/student/id/text()",
+"column.xpath.course"="/student/course/text()",
+"column.xpath.year"="/student/year/text()"
+)
+stored as 
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<student>",
+"xmlinput.end"="</student>"
+);
+
+load data local inpath '/home/prakash/student1.xml' into table student1_xml;
+
+
+CREATE TABLE student1_xml_op(name string, id int, course string, year int);
+
+
+INSERT INTO TABLE student1_xml_op SELECT * FROM student1_xml WHERE id > 2 and course = 'spark';

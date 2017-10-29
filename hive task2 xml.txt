@@ -1,0 +1,35 @@
+create table student2_xml(
+name string,
+id int,
+course string,
+year int
+)
+row format serde 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+with serdeproperties(
+"column.xpath.name"="/student/name/text()",
+"column.xpath.id"="/student/id/text()",
+"column.xpath.course"="/student/course/text()",
+"column.xpath.year"="/student/year/text()"
+)
+stored as 
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+TBLPROPERTIES (
+"xmlinput.start"="<student>",
+"xmlinput.end"="</student>"
+);
+
+
+
+load data local inpath '/home/prakash/student2.xml' into table student2_xml;
+
+
+OUTPUT:
+-------
+anil	1	spark	2016
+venkat	2	spark	2016
+raj	3	spark	2016
+sunil	4	hadoop	2015
+anvith	5	hadoop	2015
+dev	6	hadoop	2015
+
