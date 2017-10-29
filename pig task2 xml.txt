@@ -1,0 +1,17 @@
+XML DATA:
+----------
+
+hadoop fs -put /home/prakash/student2.xml /pigtasks
+
+register '/home/prakash/work/pig-0.15.0/lib/piggybank.jar';
+
+DEFINE XPath org.apache.pig.piggybank.evaluation.xml.XPath();
+
+student2xml = LOAD '/pigtasks/student2.xml' using org.apache.pig.piggybank.storage.XMLLoader('student') as (x:chararray);
+
+student2_xml = FOREACH student2xml GENERATE XPath(x, 'student/name'), XPath(x, 'student/id'), XPath(x, 'student/course'), XPath(x, 'student/year');
+
+
+student2_xmlop = FILTER student2_xml BY (int)$1 >2 and $2 == 'spark';
+
+STORE student2_xmlop INTO '/pigtasks/student2_xml_op'; 

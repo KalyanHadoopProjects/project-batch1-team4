@@ -1,0 +1,12 @@
+JSON DATA:
+-----------
+
+hadoop fs -put /home/prakash/student1.json /pigtasks
+
+student1_json = load '/pigtasks/student1.json' USING JsonLoader('name:chararray,id:int, course:chararray, year:int');
+
+dump student1_json;
+
+student1_jsonop =  FILTER student1_json by id >2 and  course == 'spark';
+
+STORE student1_jsonop INTO '/pigtasks/student1_jsonop1';
