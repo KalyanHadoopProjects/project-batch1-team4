@@ -1,0 +1,33 @@
+Project assignments:
+
+Hive Task 2:
+
+add jar /home/prakash/work/apache-hive-1.2.1-bin/lib/hive-serdes-1.0-SNAPSHOT.jar;
+
+add jar /home/prakash/Desktop/kalyan-bigdata-utils.jar;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS student_json2 (name string, id int, course string, year int)
+ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe' 
+STORED AS
+INPUTFORMAT 'com.orienit.kalyan.mapred.multiline.KalyanMultiLineInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+;
+
+load data local inpath '/home/prakash/student2.json' into table student_json2;
+
+output:
+hive> select name,id,course,year from student_json2;
+OK
+anil	1	spark	2016
+venkat	2	spark	2016
+raj	3	spark	2016
+sunil	4	hadoop	2015
+anvith	5	hadoop	2015
+dev	6	hadoop	2015
+Time taken: 0.097 seconds, Fetched: 6 row(s)
+
+hive> select name,id, course, year from student_json2 where id>2 and course="spark";
+OK
+raj	3	spark	2016
+Time taken: 1.782 seconds, Fetched: 1 row(s)
+hive> 
